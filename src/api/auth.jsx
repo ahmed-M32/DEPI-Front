@@ -14,10 +14,10 @@ export const getStoredToken = () => {
     return localStorage.getItem('authToken');
 };
 
-const getAxiosConfig = () => ({
+const getAxiosConfig = {
     withCredentials: true,
    
-});
+}
 
 /**
  * Login user

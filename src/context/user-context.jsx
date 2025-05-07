@@ -82,7 +82,7 @@ export const UserProvider = ({ children }) => {
         setUser(null);
         setToken(null);
         setUsers([]);
-        setAuthToken(null); // Clear axios headers
+        setAuthToken(null);
         localStorage.removeItem("user");
     };
 
