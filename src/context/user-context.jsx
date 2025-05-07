@@ -44,7 +44,6 @@ export const UserProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.error("Auth validation failed:", error);
-                handleLogout();
             } finally {
                 setLoading(false);
             }
