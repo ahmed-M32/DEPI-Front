@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { createContext, useState, useContext, useEffect } from "react";
@@ -25,7 +24,7 @@ export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    /*useEffect(() => {
+    useEffect(() => {
         const validateAuth = async () => {
             const storedToken = getStoredToken();
             console.log(storedToken);
@@ -36,12 +35,11 @@ export const UserProvider = ({ children }) => {
             }
 
             try {
-                const response = await getCurrentUser();
-                
+                const response = await getCurrentUser(storedToken);
                 if (response.success) {
                     setUser(response.data.user);
                     setToken(storedToken);
-                    setAuthToken(storedToken); // Ensure axios headers are set
+                    setAuthToken(storedToken); 
                 } else if (response.code === 401) {
                     console.log("error here");
                     
@@ -54,27 +52,30 @@ export const UserProvider = ({ children }) => {
         };
 
         validateAuth();
-    }, []);*/
+    }, []);
 
+    useEffect(() => {
         const fetchUsers = async () => {
+            if (!token) return;
 
             try {
                 const response = await getUsers();
                 if (response.success) {
                     setUsers(response.data);
-                    console.log(response.data);
-                    
                 }
             } catch (error) {
                 console.error("Failed to fetch users:", error);
             }
         };
 
-        
-    
+        if (token) {
+            fetchUsers();
+        }
+    }, [token]);
 
     const login = (userData, authToken) => {        
         setUser(userData);
+        setToken(authToken);
         setAuthToken(authToken); 
         localStorage.setItem("user", JSON.stringify(userData));
     };
@@ -88,8 +89,9 @@ export const UserProvider = ({ children }) => {
     };
 
     const logout = async () => {
+        if (token) {
             try {
-                const response = await import("../api/auth.jsx").then(module => module.logout());
+                const response = await import("../api/auth.jsx").then(module => module.logout(token));
                 if (response.success) {
                     handleLogout();
                 }
@@ -97,7 +99,9 @@ export const UserProvider = ({ children }) => {
                 console.error("Logout failed:", error);
                 handleLogout();
             }
-        
+        } else {
+            handleLogout();
+        }
     };
 
     const updateUser = (newUserData) => {
@@ -112,8 +116,7 @@ export const UserProvider = ({ children }) => {
         loading,
         login,
         logout,
-        updateUser,
-        fetchUsers
+        updateUser
     };
 
     return (
