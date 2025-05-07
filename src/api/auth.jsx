@@ -2,14 +2,11 @@ import axios from "axios";
 
 const API_URL = "https://depi-back-production-fb68.up.railway.app/api/auth";
 
-// Token storage helpers
 export const setAuthToken = (token) => {
     if (token) {
         localStorage.setItem('authToken', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } else {
         localStorage.removeItem('authToken');
-        delete axios.defaults.headers.common['Authorization'];
     }
 };
 
@@ -19,10 +16,7 @@ export const getStoredToken = () => {
 
 const getAxiosConfig = (token = null) => ({
     withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
-    }
+   
 });
 
 /**
