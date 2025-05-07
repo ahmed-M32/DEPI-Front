@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 
-const API_URL = "http:////depi-back-production-fb68.up.railway.app/api";
+const API_URL = "https://depi-back-production-fb68.up.railway.app/api";
 
 const axiosConfig = {
     withCredentials: true,
