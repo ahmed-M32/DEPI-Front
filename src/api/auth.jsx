@@ -14,7 +14,7 @@ export const getStoredToken = () => {
     return localStorage.getItem('authToken');
 };
 
-const getAxiosConfig = (token = null) => ({
+const getAxiosConfig = () => ({
     withCredentials: true,
    
 });
@@ -73,7 +73,7 @@ export const register = async (userData) => {
  */
 export const getCurrentUser = async (token) => {
     try {
-        const response = await axios.get(`${API_URL}/me`, getAxiosConfig(token));
+        const response = await axios.get(`${API_URL}/me`, getAxiosConfig());
         return {
             success: true,
             data: response.data
@@ -92,10 +92,10 @@ export const getCurrentUser = async (token) => {
  * @param {string} token - Auth token
  * @returns {Promise<Object>} Response object
  */
-export const logout = async (token) => {
+export const logout = async () => {
     try {
-        const response = await axios.post(`${API_URL}/logout`, {}, getAxiosConfig(token));
-        setAuthToken(null); // Clear the token on logout
+        const response = await axios.post(`${API_URL}/logout`, {}, getAxiosConfig());
+        setAuthToken(null); 
         return {
             success: true,
             data: response.data
