@@ -56,7 +56,6 @@ export const UserProvider = ({ children }) => {
         validateAuth();
     }, []);*/
 
-    useEffect(() => {
         const fetchUsers = async () => {
 
             try {
@@ -69,13 +68,13 @@ export const UserProvider = ({ children }) => {
             }
         };
 
-            fetchUsers();
         
-    }, [user]);
+    
 
     const login = (userData, authToken) => {        
         setUser(userData);
         setAuthToken(authToken); 
+        fetchUsers();
         localStorage.setItem("user", JSON.stringify(userData));
     };
 
@@ -112,7 +111,8 @@ export const UserProvider = ({ children }) => {
         loading,
         login,
         logout,
-        updateUser
+        updateUser,
+        fetchUsers
     };
 
     return (
