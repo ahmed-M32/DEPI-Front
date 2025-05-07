@@ -27,6 +27,8 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         const validateAuth = async () => {
             const storedToken = getStoredToken();
+            console.log(storedToken);
+            
             if (!storedToken) {
                 setLoading(false);
                 return;
@@ -34,6 +36,8 @@ export const UserProvider = ({ children }) => {
 
             try {
                 const response = await getCurrentUser(storedToken);
+                console.log(response);
+                
                 if (response.success) {
                     setUser(response.data.user);
                     setToken(storedToken);
