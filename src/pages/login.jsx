@@ -13,7 +13,7 @@ const LoginPage = () => {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { login: userLogin } = useUser();
+    const { login: userLogin, fetchUsers } = useUser();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,6 +32,7 @@ const LoginPage = () => {
             const response = await login(formData);
             if (response.success) {
                 const { user, token } = response.data.data;
+                fetchUsers();
                 userLogin(user, token);
                 navigate("/chats");
             } else {
