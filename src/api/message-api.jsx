@@ -4,10 +4,7 @@ import axios from "axios";
 const API_URL = "https://depi-back-production-fb68.up.railway.app/api";
 
 const axiosConfig = {
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    withCredentials: true
 };
 
 export const getMessages = async (conversationId) => {
