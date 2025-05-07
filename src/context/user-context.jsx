@@ -62,6 +62,8 @@ export const UserProvider = ({ children }) => {
                 const response = await getUsers();
                 if (response.success) {
                     setUsers(response.data);
+                    console.log(response.data);
+                    
                 }
             } catch (error) {
                 console.error("Failed to fetch users:", error);
