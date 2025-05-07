@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { createContext, useState, useContext, useEffect } from "react";
@@ -24,7 +25,7 @@ export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const validateAuth = async () => {
             const storedToken = getStoredToken();
             console.log(storedToken);
@@ -35,8 +36,7 @@ export const UserProvider = ({ children }) => {
             }
 
             try {
-                const response = await getCurrentUser(storedToken);
-                console.log(response);
+                const response = await getCurrentUser();
                 
                 if (response.success) {
                     setUser(response.data.user);
@@ -54,11 +54,10 @@ export const UserProvider = ({ children }) => {
         };
 
         validateAuth();
-    }, []);
+    }, []);*/
 
     useEffect(() => {
         const fetchUsers = async () => {
-            if (!token) return;
 
             try {
                 const response = await getUsers();
@@ -70,10 +69,9 @@ export const UserProvider = ({ children }) => {
             }
         };
 
-        if (token) {
             fetchUsers();
-        }
-    }, [token]);
+        
+    }, []);
 
     const login = (userData, authToken) => {        
         setUser(userData);
@@ -91,9 +89,8 @@ export const UserProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        if (token) {
             try {
-                const response = await import("../api/auth.jsx").then(module => module.logout(token));
+                const response = await import("../api/auth.jsx").then(module => module.logout());
                 if (response.success) {
                     handleLogout();
                 }
@@ -101,9 +98,7 @@ export const UserProvider = ({ children }) => {
                 console.error("Logout failed:", error);
                 handleLogout();
             }
-        } else {
-            handleLogout();
-        }
+        
     };
 
     const updateUser = (newUserData) => {

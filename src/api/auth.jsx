@@ -71,7 +71,7 @@ export const register = async (userData) => {
  * @param {string} token - Auth token
  * @returns {Promise<Object>} Response object
  */
-export const getCurrentUser = async (token) => {
+export const getCurrentUser = async () => {
     try {
         const response = await axios.get(`${API_URL}/me`, getAxiosConfig);
         return {
