@@ -28,7 +28,7 @@ const getAxiosConfig = {
  */
 export const login = async (credentials) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, credentials, getAxiosConfig());
+        const response = await axios.post(`${API_URL}/login`, credentials, getAxiosConfig);
         if (response.data?.data?.token) {
             setAuthToken(response.data.data.token);
         }
@@ -52,7 +52,7 @@ export const login = async (credentials) => {
  */
 export const register = async (userData) => {
     try {
-        const response = await axios.post(`${API_URL}/signup`, userData, getAxiosConfig());
+        const response = await axios.post(`${API_URL}/signup`, userData, getAxiosConfig);
         return {
             success: true,
             data: response.data
@@ -73,7 +73,7 @@ export const register = async (userData) => {
  */
 export const getCurrentUser = async (token) => {
     try {
-        const response = await axios.get(`${API_URL}/me`, getAxiosConfig());
+        const response = await axios.get(`${API_URL}/me`, getAxiosConfig);
         return {
             success: true,
             data: response.data
@@ -94,7 +94,7 @@ export const getCurrentUser = async (token) => {
  */
 export const logout = async () => {
     try {
-        const response = await axios.post(`${API_URL}/logout`, {}, getAxiosConfig());
+        const response = await axios.post(`${API_URL}/logout`, {}, getAxiosConfig);
         setAuthToken(null); 
         return {
             success: true,
