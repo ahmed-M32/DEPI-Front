@@ -71,7 +71,7 @@ export const UserProvider = ({ children }) => {
 
             fetchUsers();
         
-    }, []);
+    }, [user]);
 
     const login = (userData, authToken) => {        
         setUser(userData);
