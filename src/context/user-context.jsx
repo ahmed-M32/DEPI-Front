@@ -39,7 +39,8 @@ export const UserProvider = ({ children }) => {
                     setToken(storedToken);
                     setAuthToken(storedToken); // Ensure axios headers are set
                 } else if (response.code === 401) {
-                    handleLogout();
+                    console.log("error here");
+                    
                 }
             } catch (error) {
                 console.error("Auth validation failed:", error);
@@ -74,7 +75,7 @@ export const UserProvider = ({ children }) => {
     const login = (userData, authToken) => {        
         setUser(userData);
         setToken(authToken);
-        setAuthToken(authToken); // Set axios headers
+        setAuthToken(authToken); 
         localStorage.setItem("user", JSON.stringify(userData));
     };
 
@@ -95,7 +96,6 @@ export const UserProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.error("Logout failed:", error);
-                // Still clear local state even if server logout fails
                 handleLogout();
             }
         } else {
