@@ -28,7 +28,7 @@ const getAxiosConfig = {
  */
 export const login = async (credentials) => {
     try {
-        const response = await axiosInstance.post(`/login`, credentials);
+        const response = await axiosInstance.post(`/auth/login`, credentials);
         if (response.data?.data?.token) {
             setAuthToken(response.data.data.token);
         }
@@ -52,7 +52,7 @@ export const login = async (credentials) => {
  */
 export const register = async (userData) => {
     try {
-        const response = await axiosInstance.post(`/signup`, userData);
+        const response = await axiosInstance.post(`/auth/signup`, userData);
         return {
             success: true,
             data: response.data
@@ -73,7 +73,7 @@ export const register = async (userData) => {
  */
 export const getCurrentUser = async () => {
     try {
-        const response = await axiosInstance.get(`/me`);
+        const response = await axiosInstance.get(`/auth/me`);
         return {
             success: true,
             data: response.data
@@ -94,7 +94,7 @@ export const getCurrentUser = async () => {
  */
 export const logout = async () => {
     try {
-        const response = await axiosInstance.post(`/logout`, {});
+        const response = await axiosInstance.post(`/auth/logout`, {});
         setAuthToken(null); 
         return {
             success: true,
