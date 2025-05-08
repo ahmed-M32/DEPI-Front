@@ -156,10 +156,12 @@
         position: fixed;
         top: 0;
         left: -350px; /* Start off-screen */
-        height: 100vh;
+        height: 100vh !important; /* Force full height with !important */
+        max-height: 100vh !important; /* Ensure it can't exceed viewport height */
         z-index: 20;
         transition: left 0.3s ease;
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto; /* Allow scrolling if content is too tall */
     }
     
     .sidebar-toggle {

@@ -38,8 +38,8 @@ const ChatLayout = ({ children }) => {
             <div className="sidebar-overlay" onClick={toggleSidebar}></div>
             <Sidebar onChatSelect={(chat) => {
                 handleChatSelect(chat);
-                // Close sidebar after selecting a chat on mobile
-                setSidebarOpen(false);
+                // Keep sidebar open after selecting a chat
+                // Don't close it automatically
             }} selectedChat={selectedChat} />
             <main className="chat-main">
                 <div className="chat-header">
