@@ -28,11 +28,7 @@ const Chats = ({ selectedChat }) => {
 	};
 
 	useEffect(() => {
-		if (!user) {
-			navigate("/login");
-			return;
-		}
-
+		
 		fetchChats();
 
 		if (socket) {

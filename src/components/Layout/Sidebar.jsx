@@ -39,7 +39,7 @@ const Sidebar = ({ onChatSelect }) => {
 	};
 
 	useEffect(() => {
-		if (!user) {
+		if (!user && !loading) {
 			navigate("/login");
 			return;
 		}
