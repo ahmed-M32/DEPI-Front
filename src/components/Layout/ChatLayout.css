@@ -92,6 +92,17 @@
 }
 
 /* Responsive Design */
+@media (max-width: 992px) {
+    .chat-layout {
+        flex-direction: column;
+    }
+
+    .chat-header {
+        height: 50px;
+        padding: 0 10px;
+    }
+}
+
 @media (max-width: 768px) {
     .chat-layout {
         flex-direction: column;
@@ -100,5 +111,29 @@
     .chat-header {
         height: 50px;
         padding: 0 10px;
+    }
+    
+    .chat-content {
+        height: calc(100vh - 50px);
+    }
+}
+
+@media (max-width: 576px) {
+    #root {
+        padding: 0;
+    }
+    
+    .chat-layout {
+        width: 100vw;
+        height: 100vh;
+    }
+    
+    .chat-header {
+        padding: 0 8px;
+    }
+    
+    .settings-button {
+        width: 36px;
+        height: 36px;
     }
 }
