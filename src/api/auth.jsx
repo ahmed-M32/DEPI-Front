@@ -31,10 +31,14 @@ const getAxiosConfig = {
  */
 export const login = async (credentials) => {
     try {
+        // When we login, the server should set the cookie automatically
         const response = await axiosInstance.post(`/auth/login`, credentials);
+        
+        // We still store the token in localStorage for UI state purposes
         if (response.data?.data?.token) {
             setAuthToken(response.data.data.token);
         }
+        
         return {
             success: true,
             data: response.data

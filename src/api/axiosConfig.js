@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getStoredToken } from './auth';
 
 const API_URL = 'https://depi-back-production-fb68.up.railway.app/api';
 
@@ -11,7 +12,18 @@ const axiosInstance = axios.create({
   },
 });
 
-// We don't need to manually add the token to headers since it will be in cookies
-// The browser will automatically send cookies with requests when withCredentials is true
+// Add a request interceptor to include the token in a custom header as a fallback
+// This way, if cookies aren't working, the backend can still authenticate using this header
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = getStoredToken();
+    if (token) {
+      // Add token to a custom header
+      config.headers['X-Auth-Token'] = token;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 export default axiosInstance;

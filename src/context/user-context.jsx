@@ -26,26 +26,37 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const validateAuth = async () => {
-            const storedToken = getStoredToken();
-            console.log(storedToken);
-            
-            if (!storedToken) {
-                setLoading(false);
-                return;
-            }
-
+            // Even if there's no token in localStorage, we should still try to validate
+            // authentication using cookies that might be present
             try {
-                const response = await getCurrentUser(storedToken);
+                console.log('Attempting to validate authentication with cookies...');
+                const response = await getCurrentUser();
+                
                 if (response.success) {
+                    console.log('Authentication successful via cookies');
+                    // If we get a successful response, the cookie is valid
                     setUser(response.data.user);
-                    setToken(storedToken);
-                    setAuthToken(storedToken); 
-                } else if (response.code === 401) {
-                    console.log("error here");
                     
+                    // If we got a token in the response, store it
+                    if (response.data.token) {
+                        setToken(response.data.token);
+                        setAuthToken(response.data.token);
+                    } else {
+                        // Otherwise use the stored token if available
+                        const storedToken = getStoredToken();
+                        if (storedToken) {
+                            setToken(storedToken);
+                        }
+                    }
+                } else if (response.code === 401) {
+                    console.log("Authentication failed: Unauthorized");
+                    // Clear user data on 401 Unauthorized
+                    handleLogout();
                 }
             } catch (error) {
                 console.error("Auth validation failed:", error);
+                // On error, we don't automatically logout - the cookie might still be valid
+                // but there could be a network error or other issue
             } finally {
                 setLoading(false);
             }
