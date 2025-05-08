@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { getCurrentUser, getStoredToken, setAuthToken } from "../api/auth.jsx";
+import { getCurrentUser, getStoredToken, setAuthToken, isUserLoggedIn } from "../api/auth.jsx";
 import { getUsers } from "../api/message-api.jsx";
 
 const UserContext = createContext();
@@ -26,6 +26,20 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const validateAuth = async () => {
+            // Check if the user is logged in based on our persistent flag
+            const loggedIn = isUserLoggedIn();
+            const storedUser = localStorage.getItem("user");
+            
+            // If we have a stored user and the logged in flag is set, use that immediately
+            // to prevent flashing of login screen
+            if (loggedIn && storedUser) {
+                setUser(JSON.parse(storedUser));
+                const storedToken = getStoredToken();
+                if (storedToken) {
+                    setToken(storedToken);
+                }
+            }
+            
             // Even if there's no token in localStorage, we should still try to validate
             // authentication using cookies that might be present
             try {
@@ -49,20 +63,19 @@ export const UserProvider = ({ children }) => {
                             setToken(storedToken);
                         }
                     }
-                } else if (response.code === 401) {
+                } else if (response.code === 401 && !loggedIn) {
+                    // Only clear user data on explicit 401 Unauthorized and if not already logged in
                     console.log("Authentication failed: Unauthorized");
-                    // Only clear user data on explicit 401 Unauthorized
                     handleLogout();
                 }
             } catch (error) {
                 console.error("Auth validation failed:", error);
-                // On error, we don't automatically logout - the cookie might still be valid
-                // but there could be a network error or other issue
-                // If we have a stored user, keep them logged in
-                const storedUser = localStorage.getItem("user");
-                if (storedUser) {
+                // On error, we don't automatically logout if we already have a user
+                if (!storedUser || !loggedIn) {
+                    console.log("No stored user data or not logged in, redirecting to login");
+                    handleLogout();
+                } else {
                     console.log("Using stored user data due to validation error");
-                    setUser(JSON.parse(storedUser));
                 }
             } finally {
                 setLoading(false);

@@ -42,7 +42,6 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    display: none; /* Hidden by default, shown on mobile */
 }
 
 .sidebar-toggle:hover {

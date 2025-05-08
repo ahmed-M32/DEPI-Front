@@ -8,13 +8,20 @@ export const setAuthToken = (token) => {
     // happens via cookies that are automatically sent with requests
     if (token) {
         localStorage.setItem('authToken', token);
+        // Set a session flag to indicate the user is logged in
+        localStorage.setItem('isLoggedIn', 'true');
     } else {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('isLoggedIn');
     }
 };
 
 export const getStoredToken = () => {
     return localStorage.getItem('authToken');
+};
+
+export const isUserLoggedIn = () => {
+    return localStorage.getItem('isLoggedIn') === 'true';
 };
 
 const getAxiosConfig = {
