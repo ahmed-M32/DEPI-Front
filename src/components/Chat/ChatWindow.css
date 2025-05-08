@@ -14,6 +14,29 @@
     border-bottom: 1px solid var(--border-color);
 }
 
+/* Sidebar toggle button in chat header */
+.chat-header .sidebar-toggle {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex !important; /* Force display with !important */
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 100; /* Ensure it's above other elements */
+    margin-right: 0.5rem;
+}
+
+.chat-header .sidebar-toggle:hover {
+    background-color: var(--hover-color);
+    color: var(--accent-color);
+}
+
 .chat-info {
     display: flex;
     align-items: center;

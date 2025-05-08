@@ -7,7 +7,7 @@ import { useSocket } from "../context/socket-context.jsx";
 import ChatWindow from "../components/Chat/ChatWindow.jsx";
 import "./chat-menu.css";
 
-const Chats = ({ selectedChat }) => {
+const Chats = ({ selectedChat, toggleSidebar }) => {
 	const navigate = useNavigate();
 	const { user } = useUser();
 	const { socket } = useSocket();
@@ -70,7 +70,11 @@ const Chats = ({ selectedChat }) => {
 	return (
 		<>
 			{selectedChat ? (
-				<ChatWindow chat={selectedChat} currentUser={user} />
+				<ChatWindow 
+					chat={selectedChat} 
+					currentUser={user} 
+					toggleSidebar={toggleSidebar} 
+				/>
 			) : (
 				<div className="no-chat-selected">
 					<h2>Select a chat to start messaging</h2>
