@@ -41,6 +41,7 @@ export const UserProvider = ({ children }) => {
                     if (response.data.token) {
                         setToken(response.data.token);
                         setAuthToken(response.data.token);
+                        localStorage.setItem("user", JSON.stringify(response.data.user));
                     } else {
                         // Otherwise use the stored token if available
                         const storedToken = getStoredToken();
@@ -50,13 +51,19 @@ export const UserProvider = ({ children }) => {
                     }
                 } else if (response.code === 401) {
                     console.log("Authentication failed: Unauthorized");
-                    // Clear user data on 401 Unauthorized
+                    // Only clear user data on explicit 401 Unauthorized
                     handleLogout();
                 }
             } catch (error) {
                 console.error("Auth validation failed:", error);
                 // On error, we don't automatically logout - the cookie might still be valid
                 // but there could be a network error or other issue
+                // If we have a stored user, keep them logged in
+                const storedUser = localStorage.getItem("user");
+                if (storedUser) {
+                    console.log("Using stored user data due to validation error");
+                    setUser(JSON.parse(storedUser));
+                }
             } finally {
                 setLoading(false);
             }

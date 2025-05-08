@@ -101,6 +101,16 @@
         height: 50px;
         padding: 0 10px;
     }
+    
+    .chat-main {
+        height: 50vh; /* Ensure chat main takes up half the viewport height */
+        min-height: 400px; /* Minimum height to ensure visibility */
+    }
+    
+    .chat-content {
+        height: calc(50vh - 50px); /* Subtract header height */
+        min-height: 350px; /* Minimum height to ensure visibility */
+    }
 }
 
 @media (max-width: 768px) {
