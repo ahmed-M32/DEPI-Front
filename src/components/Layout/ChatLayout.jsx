@@ -62,7 +62,7 @@ const ChatLayout = ({ children }) => {
                     </div>
                 </div>
                 <div className="chat-content">
-                    {React.cloneElement(children, { selectedChat })}
+                    {React.cloneElement(children, { selectedChat,toggleSidebar })}
                 </div>
             </main>
         </div>
