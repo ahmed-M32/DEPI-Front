@@ -21,9 +21,9 @@ const ChatLayout = ({ children }) => {
         );
     }
 
-    if (!user && !loading) {
+   /* if (!user && !loading) {
         return <Navigate to="/login" />;
-    }
+    }*/
 
     const handleChatSelect = (chat) => {
         setSelectedChat(chat);
