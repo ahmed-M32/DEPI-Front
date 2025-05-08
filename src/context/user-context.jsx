@@ -26,58 +26,61 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const validateAuth = async () => {
-            // Check if the user is logged in based on our persistent flag
+            // IMPORTANT: First check if we have stored credentials and use them immediately
+            // This prevents the login screen flash and maintains state across refreshes
             const loggedIn = isUserLoggedIn();
             const storedUser = localStorage.getItem("user");
             
-            // If we have a stored user and the logged in flag is set, use that immediately
-            // to prevent flashing of login screen
             if (loggedIn && storedUser) {
+                // We have stored credentials, use them immediately
                 setUser(JSON.parse(storedUser));
                 const storedToken = getStoredToken();
                 if (storedToken) {
                     setToken(storedToken);
+                    setAuthToken(storedToken); // Ensure token is set in auth module
                 }
+                
+                // Set loading to false immediately if we have stored credentials
+                // This allows the UI to render without waiting for API response
+                setLoading(false);
             }
             
-            // Even if there's no token in localStorage, we should still try to validate
-            // authentication using cookies that might be present
+            // AFTER setting stored credentials, try to validate with the server
+            // But don't block the UI on this request
             try {
-                console.log('Attempting to validate authentication with cookies...');
+                console.log('Validating authentication with server...');
                 const response = await getCurrentUser();
                 
                 if (response.success) {
-                    console.log('Authentication successful via cookies');
-                    // If we get a successful response, the cookie is valid
+                    console.log('Authentication validated successfully');
+                    // Update with fresh user data from server
                     setUser(response.data.user);
+                    localStorage.setItem("user", JSON.stringify(response.data.user));
                     
-                    // If we got a token in the response, store it
                     if (response.data.token) {
                         setToken(response.data.token);
                         setAuthToken(response.data.token);
-                        localStorage.setItem("user", JSON.stringify(response.data.user));
-                    } else {
-                        // Otherwise use the stored token if available
-                        const storedToken = getStoredToken();
-                        if (storedToken) {
-                            setToken(storedToken);
-                        }
                     }
-                } else if (response.code === 401 && !loggedIn) {
-                    // Only clear user data on explicit 401 Unauthorized and if not already logged in
-                    console.log("Authentication failed: Unauthorized");
-                    handleLogout();
+                } else if (response.code === 401) {
+                    // Only logout if we get a clear 401 Unauthorized
+                    // AND we don't have valid stored credentials
+                    if (!loggedIn) {
+                        console.log("Authentication failed: Unauthorized");
+                        handleLogout();
+                    }
                 }
             } catch (error) {
-                console.error("Auth validation failed:", error);
-                // On error, we don't automatically logout if we already have a user
-                if (!storedUser || !loggedIn) {
-                    console.log("No stored user data or not logged in, redirecting to login");
+                console.error("Server validation failed:", error);
+                // CRITICAL: On network errors, DO NOT logout if we have stored credentials
+                // This ensures the app remains usable during connectivity issues
+                if (!loggedIn && !storedUser) {
+                    console.log("No stored credentials, redirecting to login");
                     handleLogout();
                 } else {
-                    console.log("Using stored user data due to validation error");
+                    console.log("Using stored credentials due to server error");
                 }
             } finally {
+                // Ensure loading is set to false in all cases
                 setLoading(false);
             }
         };

@@ -3,9 +3,7 @@ import axiosInstance from "./axiosConfig";
 const API_URL = "https://depi-back-production-fb68.up.railway.app/api/";
 
 export const setAuthToken = (token) => {
-    // We still store the token in localStorage for UI purposes
-    // (knowing if user is logged in), but the actual authentication
-    // happens via cookies that are automatically sent with requests
+   
     if (token) {
         localStorage.setItem('authToken', token);
         // Set a session flag to indicate the user is logged in

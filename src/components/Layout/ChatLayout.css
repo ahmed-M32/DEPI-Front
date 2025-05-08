@@ -38,10 +38,11 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    display: flex;
+    display: flex !important; /* Force display with !important */
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    z-index: 100; /* Ensure it's above other elements */
 }
 
 .sidebar-toggle:hover {
@@ -162,7 +163,7 @@
     }
     
     .sidebar-toggle {
-        display: flex; /* Show on mobile */
+        display: flex !important; /* Force display on mobile with !important */
     }
     
     .sidebar-open .sidebar {
