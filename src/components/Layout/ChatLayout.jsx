@@ -21,7 +21,7 @@ const ChatLayout = ({ children }) => {
         );
     }
 
-    if (!user) {
+    if (!user && !loading) {
         return <Navigate to="/login" />;
     }
 
