@@ -16,8 +16,15 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem("user");
-        return storedUser ? JSON.parse(storedUser) : null;
+        try {
+            const storedUser = localStorage.getItem("user");
+            return storedUser && storedUser !== "undefined" ? JSON.parse(storedUser) : null;
+        } catch (error) {
+            console.error("Error parsing user from localStorage:", error);
+            // Clear the invalid data
+            localStorage.removeItem("user");
+            return null;
+        }
     });
 
     const [token, setToken] = useState(() => getStoredToken());
@@ -31,13 +38,19 @@ export const UserProvider = ({ children }) => {
             const loggedIn = isUserLoggedIn();
             const storedUser = localStorage.getItem("user");
             
-            if (loggedIn && storedUser) {
-                // We have stored credentials, use them immediately
-                setUser(JSON.parse(storedUser));
-                const storedToken = getStoredToken();
-                if (storedToken) {
-                    setToken(storedToken);
-                    setAuthToken(storedToken); // Ensure token is set in auth module
+            if (loggedIn && storedUser && storedUser !== "undefined") {
+                try {
+                    // We have stored credentials, use them immediately
+                    setUser(JSON.parse(storedUser));
+                    const storedToken = getStoredToken();
+                    if (storedToken) {
+                        setToken(storedToken);
+                        setAuthToken(storedToken); // Ensure token is set in auth module
+                    }
+                } catch (error) {
+                    console.error("Error parsing user from localStorage:", error);
+                    // Clear the invalid data
+                    localStorage.removeItem("user");
                 }
                 
                 // Set loading to false immediately if we have stored credentials
