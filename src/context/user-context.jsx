@@ -21,7 +21,6 @@ export const UserProvider = ({ children }) => {
             return storedUser && storedUser !== "undefined" ? JSON.parse(storedUser) : null;
         } catch (error) {
             console.error("Error parsing user from localStorage:", error);
-            // Clear the invalid data
             localStorage.removeItem("user");
             return null;
         }
@@ -30,6 +29,13 @@ export const UserProvider = ({ children }) => {
     const [token, setToken] = useState(() => getStoredToken());
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Add a useEffect to ensure user data is always saved to localStorage when it changes
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        }
+    }, [user]);
 
     useEffect(() => {
         const validateAuth = async () => {
@@ -64,15 +70,23 @@ export const UserProvider = ({ children }) => {
                 console.log('Validating authentication with server...');
                 const response = await getCurrentUser();
                 
-                if (response.success) {
+                if (response.success && response.data && response.data.user) {
                     console.log('Authentication validated successfully');
                     // Update with fresh user data from server
-                    setUser(response.data.user);
-                    localStorage.setItem("user", JSON.stringify(response.data.user));
+                    const userData = response.data.user;
                     
-                    if (response.data.token) {
-                        setToken(response.data.token);
-                        setAuthToken(response.data.token);
+                    // Only update if we have valid user data
+                    if (userData && typeof userData === 'object') {
+                        setUser(userData);
+                        localStorage.setItem("user", JSON.stringify(userData));
+                        
+                        if (response.data.token) {
+                            setToken(response.data.token);
+                            setAuthToken(response.data.token);
+                        }
+                    } else {
+                        console.warn('Received invalid user data from server:', userData);
+                        // Don't overwrite existing valid user data with invalid data
                     }
                 } else if (response.code === 401) {
                     // Only logout if we get a clear 401 Unauthorized
@@ -121,10 +135,17 @@ export const UserProvider = ({ children }) => {
     }, [token]);
 
     const login = (userData, authToken) => {        
-        setUser(userData);
-        setToken(authToken);
-        setAuthToken(authToken); 
-        localStorage.setItem("user", JSON.stringify(userData));
+        // Make sure userData is not undefined or null before setting
+        if (userData) {
+            setUser(userData);
+            // Ensure we're storing a valid JSON string
+            localStorage.setItem("user", JSON.stringify(userData));
+        }
+        
+        if (authToken) {
+            setToken(authToken);
+            setAuthToken(authToken);
+        }
     };
 
     const handleLogout = () => {
