@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
-import axios from 'axios';
+import axiosInstance from '../api/axiosConfig';
 import { useUser } from '../context/user-context';
 import './ProfilePictureUpload.css';
 
@@ -27,16 +27,7 @@ const ProfilePictureUpload = () => {
             const base64Image = await convertToBase64(file);
 
             // Upload to server using Axios
-            const response = await axios.put(
-                'https://depi-back-production-fb68.up.railway.app/api/auth/profile-picture',
-                { image: base64Image },
-                {withCredentials: true},
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                }
-            );
+            const response = await axiosInstance.put('/auth/profile-picture', { image: base64Image });
 
             updateUser(response.data.data.user);
         } catch (err) {
@@ -53,14 +44,7 @@ const ProfilePictureUpload = () => {
             setIsUploading(true);
             setError(null);
 
-            const response = await axios.delete(
-                'https://depi-back-production-fb68.up.railway.app/api/auth/profile-picture',
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
-                    }
-                }
-            );
+            const response = await axiosInstance.delete('/auth/profile-picture');
 
             updateUser(response.data.data.user);
         } catch (err) {

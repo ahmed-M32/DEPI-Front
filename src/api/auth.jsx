@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "./axiosConfig";
 
 const API_URL = "https://depi-back-production-fb68.up.railway.app/api/auth";
 
@@ -28,7 +28,7 @@ const getAxiosConfig = {
  */
 export const login = async (credentials) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, credentials, getAxiosConfig);
+        const response = await axiosInstance.post(`/login`, credentials);
         if (response.data?.data?.token) {
             setAuthToken(response.data.data.token);
         }
@@ -52,7 +52,7 @@ export const login = async (credentials) => {
  */
 export const register = async (userData) => {
     try {
-        const response = await axios.post(`${API_URL}/signup`, userData, getAxiosConfig);
+        const response = await axiosInstance.post(`/signup`, userData);
         return {
             success: true,
             data: response.data
@@ -73,7 +73,7 @@ export const register = async (userData) => {
  */
 export const getCurrentUser = async () => {
     try {
-        const response = await axios.get(`${API_URL}/me`, getAxiosConfig);
+        const response = await axiosInstance.get(`/me`);
         return {
             success: true,
             data: response.data
@@ -94,7 +94,7 @@ export const getCurrentUser = async () => {
  */
 export const logout = async () => {
     try {
-        const response = await axios.post(`${API_URL}/logout`, {}, getAxiosConfig);
+        const response = await axiosInstance.post(`/logout`, {});
         setAuthToken(null); 
         return {
             success: true,

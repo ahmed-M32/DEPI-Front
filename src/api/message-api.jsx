@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import axios from "axios";
+import axiosInstance from './axiosConfig';
 
 const API_URL = "https://depi-back-production-fb68.up.railway.app/api";
 
@@ -9,7 +9,7 @@ const axiosConfig = {
 
 export const getMessages = async (conversationId) => {
     try {
-        const response = await axios.get(`${API_URL}/message/${conversationId}`, axiosConfig);
+        const response = await axiosInstance.get(`/message/${conversationId}`, axiosConfig);
         return {
             success: true,
             data: response.data
@@ -25,7 +25,7 @@ export const getMessages = async (conversationId) => {
 
 export const getUsers = async () => {
     try {
-        const response = await axios.get(`${API_URL}/message/users`, axiosConfig);
+        const response = await axiosInstance.get('/message/users', axiosConfig);
         return {
             success: true,
             data: response.data
@@ -41,7 +41,7 @@ export const getUsers = async () => {
 
 export const getChats = async () => {
     try {
-        const response = await axios.get(`${API_URL}/message/chats`, axiosConfig);
+        const response = await axiosInstance.get('/message/chats', axiosConfig);
         return {
             success: true,
             data: response.data
@@ -57,7 +57,7 @@ export const getChats = async () => {
 
 export const createNewChat = async (userId) => {
     try {
-        const response = await axios.post(`${API_URL}/message/chat`, { member: userId }, axiosConfig);
+        const response = await axiosInstance.post('/message/chat', { member: userId }, axiosConfig);
         return {
             success: true,
             data: response.data
@@ -73,7 +73,7 @@ export const createNewChat = async (userId) => {
 
 export const createNewGroup = async (data) => {
     try {
-        const response = await axios.post(`${API_URL}/message/group`, data, axiosConfig);
+        const response = await axiosInstance.post('/message/group', data, axiosConfig);
         return {
             success: true,
             data: response.data
@@ -89,7 +89,7 @@ export const createNewGroup = async (data) => {
 
 export const sendMessage = async (chatId, messageData) => {
     try {
-        const response = await axios.post(`${API_URL}/message/send/${chatId}`, {
+        const response = await axiosInstance.post(`/message/send/${chatId}`, {
             content: messageData.content,
             image: messageData.image,
             receiver : messageData.receiver,
